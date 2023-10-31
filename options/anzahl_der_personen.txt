@@ -1,0 +1,8 @@
+eine Person
+zwei Personen
+drei Personen
+vier Personen
+fünf Personen
+sechs Personen
+sieben Personen
+acht Personen
