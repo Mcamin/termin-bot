@@ -3,7 +3,6 @@
 This python script uses Selenium library to automatically detect when an appointment is available at
 the Ausländerbehörde Berlin for the selected visa service. Whenever an available day is found, it beeps.
 
-To create instructions for setting up your Python project, including creating a virtual environment, installing requirements, running the script, and adjusting the `.env` file, you can include the following steps in your README file:
 
 ## Setup
 
@@ -19,17 +18,14 @@ Make sure you have the following prerequisites installed on your system:
 ### 2. Clone the Repository
 
 First, clone the repository to your local machine using the following command:
-p
 ```bash
 git clone https://github.com/Mcamin/termin-bot
 cd termin-bot
 ```
 
-Replace `<repository_url>` with the URL of your Git repository and `<repository_directory>` with the desired folder name.
-
 ### 3. Create a Virtual Environment
 
-It's a good practice to create a virtual environment to isolate your project's dependencies. To create a virtual environment, use the following commands:
+To create a virtual environment, use the following commands:
 
 ```bash
 # On Windows
@@ -65,18 +61,16 @@ pip install -r requirements.txt
 
 ### 6. Rename `.env.default` to `.env`
 
-You should have a `.env.default` file in your project directory. Make a copy of this file and rename it to `.env`. Adjust the configuration settings in the `.env` file according to your project's requirements. This file may contain sensitive information like API keys or database credentials, so be sure to keep it secure and never commit it to version control.
+You should have a `.env.default` file in your project directory. Make a copy of this file and rename it to `.env`. Adjust the configuration settings in the `.env` file accordingly.
 
 ### 7. Run the Python Script
 
-You can now run your Python script using the following command, assuming your main script is named `main.py`:
+You can now run your Python script using the following command:
 
 ```bash
 python main.py
 ```
 
-Your Python project should now be set up and running. Make sure to consult your project's documentation for specific usage instructions and details about its functionality.
 
-That's it! Your README should provide clear and concise instructions for setting up and running your Python project.
 
 
