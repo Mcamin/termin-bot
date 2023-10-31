@@ -1,0 +1,4 @@
+pygame==2.5.2
+python-dotenv==1.0.0
+selenium==4.14.0
+webdriver-manager==4.0.1
