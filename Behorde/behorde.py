@@ -179,7 +179,7 @@ class Auslanderbehorde:
                 found = self._check_appointment()
             self._success()
         except Exception as e:
-            get_traceback(e)
+            logging.info(get_traceback(e))
             self.driver.quit()
             self.run()
 
