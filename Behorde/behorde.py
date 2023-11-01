@@ -93,7 +93,6 @@ class Auslanderbehorde:
                                                         '4]/form/div/div/div/div/div/div/div/div/div/div[1]/div['
                                                         '1]/div[2]/a'))
         )
-        time.sleep(5)
         self.driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div['
                                            '4]/form/div/div/div/div/div/div/div/div/div/div[1]/div[1]/div[2]/a').click()
         time.sleep(2)
@@ -120,7 +119,7 @@ class Auslanderbehorde:
             labels = selection.find_elements(By.TAG_NAME, 'label')
             selected_label = next((x for x in labels if condition(x.text)), None)
             selected_label.find_element(By.XPATH, './parent::*').click()
-            time.sleep(5)
+            time.sleep(3)
 
     def _set_visa_type(self):
         condition = lambda typ: typ == visa_type
@@ -128,7 +127,7 @@ class Auslanderbehorde:
         labels = selection.find_elements(By.TAG_NAME, 'label')
         selected_label = next((x for x in labels if condition(x.text)), None)
         selected_label.find_element(By.XPATH, './parent::*').click()
-        time.sleep(5)
+        time.sleep(10)
 
     def _success(self):
         logging.info("!!!Appointment Found - Do not close the window!!!!")
@@ -154,7 +153,7 @@ class Auslanderbehorde:
         self._set_visa_type()
         # Submit
         self.driver.find_element(By.ID, 'applicationForm:managedForm:proceed').click()
-        time.sleep(10)
+        time.sleep(50)
 
     def _check_appointment(self):
         apt_found = False
@@ -179,6 +178,7 @@ class Auslanderbehorde:
                 found = self._check_appointment()
             self._success()
         except Exception as e:
+            print(get_traceback(e))
             logging.info(get_traceback(e))
             self.driver.quit()
             self.run()
