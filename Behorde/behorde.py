@@ -1,3 +1,5 @@
+import traceback
+
 from selenium.webdriver.support import expected_conditions as ec
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -30,6 +32,16 @@ def play_wav_file(file_path):
     # Wait for the audio to finish playing
     while pygame.mixer.music.get_busy():
         pygame.time.Clock().tick(10)
+
+
+def get_traceback(e):
+    """
+    Gets the errors' Traceback
+    :param e: the error object
+    :return: the error message
+    """
+    lines = traceback.format_exception(type(e), e, e.__traceback__)
+    return ''.join(lines)
 
 
 class Auslanderbehorde:
@@ -153,19 +165,23 @@ class Auslanderbehorde:
     def run(self):
         """
         Run The process forever
-        :return:
         """
-        found = False
-        self._init_driver()
-        # Test audio file
-        # play_wav_file(self.sound_file)
-        while not found:
-            logging.info("Trying to find an appointment.")
-            self._enter_start_page()
-            self._agree_on_terms()
-            self._fill_out_form()
-            found = self._check_appointment()
-        self._success()
+        try:
+            found = False
+            self._init_driver()
+            # Test audio file
+            # play_wav_file(self.sound_file)
+            while not found:
+                logging.info("Trying to find an appointment.")
+                self._enter_start_page()
+                self._agree_on_terms()
+                self._fill_out_form()
+                found = self._check_appointment()
+            self._success()
+        except Exception as e:
+            get_traceback(e)
+            self.driver.quit()
+            self.run()
 
     def _get_country_list(self):
         selection = self.driver.find_element(By.ID, 'xi-sel-400')
