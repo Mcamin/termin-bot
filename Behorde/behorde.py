@@ -23,6 +23,10 @@ service_option = os.getenv('SERVICE_OPTION')
 service_category = os.getenv('SERVICE_CATEGORY')
 visa_type = os.getenv('VISA_TYPE')
 
+logging.basicConfig(
+    format='%(asctime)s\t%(levelname)s\t%(message)s',
+    level=logging.INFO,
+)
 
 def play_wav_file(file_path):
     pygame.mixer.init()
@@ -49,6 +53,7 @@ class Auslanderbehorde:
         self.wait_time = 20
         self.sound_file = os.path.join(os.getcwd(), "alarm.wav")
         self.error_message = """Für die gewählte Dienstleistung sind aktuell keine Termine frei! Bitte"""
+        self.timeout_message ="""Vielen Dank für die Nutzung der Landesamt für Einwanderung - Terminvereinbarung! Ihre Sitzung wurde beendet."""
         self.url = url
         self.driver = None
 
@@ -131,7 +136,7 @@ class Auslanderbehorde:
 
     def _success(self):
         logging.info("!!!Appointment Found - Do not close the window!!!!")
-        while True:
+        while self._check_remaining_time():
             play_wav_file(self.sound_file)
 
     def _fill_out_form(self):
@@ -152,26 +157,37 @@ class Auslanderbehorde:
         # Tick the visa type to apply for
         self._set_visa_type()
         # Submit
-        self.driver.find_element(By.ID, 'applicationForm:managedForm:proceed').click()
-        time.sleep(50)
+        for tries in range(10):
+            if self._check_appointment() or not self._check_remaining_time():
+                break
+            self.driver.find_element(By.ID, 'applicationForm:managedForm:proceed').click()
+            time.sleep(15)
 
     def _check_appointment(self):
-        apt_found = False
-        if not (self.error_message in self.driver.page_source):
-            apt_found = True
-        return apt_found
+        matching_elements = self.driver.find_elements(
+            By.XPATH,
+            f"//li[@class='antcl_active' and span[text()='Terminauswahl']]"
+        )
+        return matching_elements
+
+    def _check_remaining_time(self):
+        return not (self.timeout_message in self.driver.page_source)
+
 
     def run(self):
         """
         Run The process forever
         """
+        attempt = 0
         try:
             found = False
             self._init_driver()
             # Test audio file
             # play_wav_file(self.sound_file)
             while not found:
-                logging.info("Trying to find an appointment.")
+                attempt += 1
+                logging.info(f"Trying to find an appointment. {attempt}")
+
                 self._enter_start_page()
                 self._agree_on_terms()
                 self._fill_out_form()
@@ -180,6 +196,7 @@ class Auslanderbehorde:
         except Exception as e:
             print(get_traceback(e))
             logging.info(get_traceback(e))
+        finally:
             self.driver.quit()
             self.run()
 
